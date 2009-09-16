@@ -40,7 +40,9 @@ var teamImg3:PreLoader = new PreLoader();
 teamImg3.load("team_img3.jpg");
 
 // now the queue looks like this:
+
 // intro.swf, home_img.jpg, home_movie.swf, product_img1.jpg, product_img2.jpg, product_img3.jpg, product_img4.jpg, team_img1.jpg, team_img2.jpg, team_img3.jpg
+
 // where intro.swf is currently loading
 }}}
 
@@ -54,7 +56,9 @@ teamImg2.loadAfter(teamImg2.url, teamImg1.url);
 teamImg3.loadAfter(teamImg3.url, teamImg2.url);
 
 // now the queue looks like this
+
 // team_img1.jpg, team_img2.jpg, team_img3.jpg, intro.swf, home_img.jpg, home_movie.swf, product_img1.jpg, product_img2.jpg, product_img3.jpg, product_img4.jpg
+
 // where team_img1.jpg is currently loading
 }}}  
 
