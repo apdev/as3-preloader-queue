@@ -1,3 +1,5 @@
+#summary A basic example of how to use the PreLoader class
+
 So you may ask: *Why don't I have direct access to the queue* (i.e. with indicies)? Because for a typical scenario it's not needed.
 
 === Example ===
