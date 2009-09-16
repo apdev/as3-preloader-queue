@@ -1,0 +1,70 @@
+So you may ask: *Why don't I have direct access to the queue* (i.e. with indicies)? Because for a typical scenario it's not needed.
+
+=== Example ===
+
+Lets assume you have a webpage where a lot of stuff needs to be preloaded. You want to make sure, that the bandwidth is always filled to have the stuff (swf and images) ready as soon as the user access a sub page.
+
+So at the beginning you put everything to the queue:
+
+{{{
+// Pseudo code. This likely wont happen in on class / method.
+
+var intro:PreLoader = new PreLoader();
+intro.load("intro.swf");
+
+var homeImage:PreLoader = new PreLoader();
+homeImage.load("home_image.jpg");
+
+var homeMovie:PreLoader = new PreLoader();
+homeMovie.load("home_movie.swf");
+
+var productImg1:PreLoader = new PreLoader();
+productImg1.load("product_img1.jpg");
+
+var productImg2:PreLoader = new PreLoader();
+productImg2.load("product_img2.jpg");
+
+var productImg3:PreLoader = new PreLoader();
+productImg3.load("product_img3.jpg");
+
+var productImg4:PreLoader = new PreLoader();
+productImg4.load("product_img4.jpg");
+
+var teamImg1:PreLoader = new PreLoader();
+teamImg1.load("team_img1.jpg");
+
+var teamImg2:PreLoader = new PreLoader();
+teamImg2.load("team_img2.jpg");
+
+var teamImg3:PreLoader = new PreLoader();
+teamImg3.load("team_img3.jpg");
+
+// now the queue looks like this:
+// intro.swf, home_img.jpg, home_movie.swf, product_img1.jpg, product_img2.jpg, product_img3.jpg, product_img4.jpg, team_img1.jpg, team_img2.jpg, team_img3.jpg
+// where intro.swf is currently loading
+}}}
+
+Now lets say the user clicks on "Team". You want to jump directly to the team sub page and load its content.
+
+{{{
+// shift team content to the beginning of the queue
+
+teamImg1.loadImmediately(teamImg1.url);
+teamImg2.loadAfter(teamImg2.url, teamImg1.url);
+teamImg3.loadAfter(teamImg3.url, teamImg2.url);
+
+// now the queue looks like this
+// team_img1.jpg, team_img2.jpg, team_img3.jpg, intro.swf, home_img.jpg, home_movie.swf, product_img1.jpg, product_img2.jpg, product_img3.jpg, product_img4.jpg
+// where team_img1.jpg is currently loading
+}}}  
+
+Additionally you might want to remove the intro movie from the queue, since it wont be displayed anymore now (since the user skipped).
+
+{{{
+// remove intro movie from queue
+
+intro.closeLoad();
+
+// now the queue looks like this
+// team_img1.jpg, team_img2.jpg, team_img3.jpg, home_img.jpg, home_movie.swf, product_img1.jpg, product_img2.jpg, product_img3.jpg, product_img4.jpg
+}}}
