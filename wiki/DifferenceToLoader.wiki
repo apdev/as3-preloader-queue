@@ -1,13 +1,22 @@
-#summary Implementation difference between PreLoader and Loader
+#summary Implementation differences between PreLoader and Loader
 
-= Introduction =
+===Implementation differences between PreLoader and Loader===
 
-Add your content here.
+{{{
+// Loader
+var ldr:Loader = new Loader();
+ldr.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoaded);
+ldr.load(new URLRequest("img.jpg"));
+addChild(ldr);
 
+// PreLoader
+var pldr:PreLoader = new PreLoader();
+pldr.addEventListener(Event.COMPLETE, onLoaded);
+pldr.load("img.jpg");
+addChild(pldr);
 
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+function onLoaded(event : Event)
+{
+  trace("onLoaded");
+}
+}}}
