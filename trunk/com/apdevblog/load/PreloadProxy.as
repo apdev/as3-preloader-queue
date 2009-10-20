@@ -258,7 +258,7 @@ package com.apdevblog.load
 			
 			_addLoadListener(pldr);
 			
-			pldr.loader.load(pldr.urlRequest);
+			pldr.loader.load(pldr.urlRequest, pldr.loaderContext);
 			
 			__preloading = true;
 		}
