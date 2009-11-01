@@ -22,9 +22,7 @@
 package com.apdevblog.load 
 {
 	import flash.events.Event;
-	import flash.events.HTTPStatusEvent;
 	import flash.events.IOErrorEvent;
-	import flash.events.ProgressEvent;
 	import flash.net.URLRequest;
 
 	/**
@@ -126,8 +124,8 @@ package com.apdevblog.load
 		 */		
 		public function PreloadProxy(s:SingletonBlocker)
 		{
-			if(s == null) throw new Error("Error: Instantiation failed: Use VEventDispatcher.getInstance() instead of new.");
-			if(__instance != null) throw new Error("Error: Instantiation failed: Only one VEventDispatcher object allowed.");
+			if(s == null) throw new Error("Error: Instantiation failed: Use PreloadProxy.getInstance() instead of new.");
+			if(__instance != null) throw new Error("Error: Instantiation failed: Only one PreloadProxy object allowed.");
 			_init();
 		}		
 		
@@ -169,10 +167,7 @@ package com.apdevblog.load
 				{ 
 					oldPldr.loader.close();
 				}
-				catch(e:*)
-				{
-				
-				}
+				catch(e:*){}
 				
 				_removeLoadListener(oldPldr);
 				__preloadArray.splice(0, 0, pldr);			}
@@ -301,63 +296,29 @@ package com.apdevblog.load
 		private function _addLoadListener(pldr:PreLoader):void
 		{
 			pldr.loader.contentLoaderInfo.addEventListener(Event.COMPLETE, _onLoadComplete, false, 0, true);
-			pldr.loader.contentLoaderInfo.addEventListener(HTTPStatusEvent.HTTP_STATUS, _onHttpStatus, false, 0, true);
-			pldr.loader.contentLoaderInfo.addEventListener(Event.INIT, _onLoadInit, false, 0, true);
 			pldr.loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, _onLoadError, false, 0, true);
-			pldr.loader.contentLoaderInfo.addEventListener(Event.OPEN, _onLoadOpen, false, 0, true);
-			pldr.loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, _onLoadProgress, false, 0, true);
-			pldr.loader.contentLoaderInfo.addEventListener(Event.UNLOAD, _onUnload, false, 0, true);
 		}
 		
 		private function _removeLoadListener(pldr:PreLoader):void
 		{
 			pldr.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, _onLoadComplete);
-			pldr.loader.contentLoaderInfo.removeEventListener(HTTPStatusEvent.HTTP_STATUS, _onHttpStatus);
-			pldr.loader.contentLoaderInfo.removeEventListener(Event.INIT, _onLoadInit);
 			pldr.loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, _onLoadError);
-			pldr.loader.contentLoaderInfo.removeEventListener(Event.OPEN, _onLoadOpen);
-			pldr.loader.contentLoaderInfo.removeEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
-			pldr.loader.contentLoaderInfo.removeEventListener(Event.UNLOAD, _onUnload);			
 		}
 		
-		private function _onLoadOpen(e:Event):void
-		{
-			var pldr:PreLoader = __preloadArray[0] as PreLoader;
-			pldr.onLoadOpen(e);
-		}		
 		private function _onLoadComplete(e:Event):void
 		{
 			var pldr:PreLoader = __preloadArray[0] as PreLoader;
-			pldr.onLoadComplete(e);
+			_removeLoadListener(pldr);
 			
 			_nextPreload();
 		}
-		private function _onLoadInit(e:Event):void
-		{
-			var pldr:PreLoader = __preloadArray[0] as PreLoader;
-			pldr.onLoadInit(e);
-		}		
-		private function _onLoadProgress(e:ProgressEvent):void
-		{
-			var pldr:PreLoader = __preloadArray[0] as PreLoader;
-			pldr.onLoadProgress(e);
-		}		
+
 		private function _onLoadError(e:IOErrorEvent):void
 		{
 			var pldr:PreLoader = __preloadArray[0] as PreLoader;
-			pldr.onLoadError(e);
+			_removeLoadListener(pldr);
 			
 			_nextPreload();				
-		}
-		private function _onHttpStatus(e:HTTPStatusEvent):void
-		{
-			var pldr:PreLoader = __preloadArray[0] as PreLoader;
-			pldr.onHttpStatus(e);	
-		}
-		private function _onUnload(e:Event):void
-		{
-			var pldr:PreLoader = __preloadArray[0] as PreLoader;
-			pldr.onUnload(e);
 		}
 	}
 }

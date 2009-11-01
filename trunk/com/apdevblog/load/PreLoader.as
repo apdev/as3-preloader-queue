@@ -102,6 +102,7 @@ package com.apdevblog.load
 		private var _isInit   : Boolean = false;
 		private var _smooth   : Boolean = false; // only works with images
 		private var _context  : LoaderContext = new LoaderContext();
+		private var _autoUnload : Boolean = false;
 		//
 
 		/**
@@ -109,7 +110,7 @@ package com.apdevblog.load
 		 */
 		public function PreLoader()
 		{
-			super();
+			addEventListener(Event.ADDED_TO_STAGE, _onAddedToStage);
 		}
 
 		/**
@@ -220,6 +221,20 @@ package com.apdevblog.load
 		{
 			_smooth = boo;
 		}
+		
+		/**
+		 * If true, unload is called, when the PreLoader is removed from stage (to 
+		 * prepare the Loader for garbage collection).
+		 */
+		public function get autoUnload() : Boolean
+		{
+			return _autoUnload;
+		}
+		
+		public function set autoUnload(autoUnload : Boolean) : void
+		{
+			_autoUnload = autoUnload;
+		}			
 		
 		/**
 		 * sets scaleX and scaleY in one go
@@ -483,20 +498,38 @@ package com.apdevblog.load
 			__ldr = new Loader();
 			__urlReq = urlReq;
 			addChild(__ldr);
+			
+			_addLoadListener(__ldr);			
 		}
 		
-		/**
-		 * @private
-		 */ 		
-		public function onLoadOpen(e:Event):void
+		private function _addLoadListener(ldr:Loader):void
+		{
+			ldr.contentLoaderInfo.addEventListener(Event.COMPLETE, _onLoadComplete, false, 0, true);
+			ldr.contentLoaderInfo.addEventListener(HTTPStatusEvent.HTTP_STATUS, _onHttpStatus, false, 0, true);
+			ldr.contentLoaderInfo.addEventListener(Event.INIT, _onLoadInit, false, 0, true);
+			ldr.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, _onLoadError, false, 0, true);
+			ldr.contentLoaderInfo.addEventListener(Event.OPEN, _onLoadOpen, false, 0, true);
+			ldr.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, _onLoadProgress, false, 0, true);
+			ldr.contentLoaderInfo.addEventListener(Event.UNLOAD, _onUnload, false, 0, true);
+		}
+		
+		private function _removeLoadListener(ldr:Loader):void
+		{
+			ldr.contentLoaderInfo.removeEventListener(Event.COMPLETE, _onLoadComplete);
+			ldr.contentLoaderInfo.removeEventListener(HTTPStatusEvent.HTTP_STATUS, _onHttpStatus);
+			ldr.contentLoaderInfo.removeEventListener(Event.INIT, _onLoadInit);
+			ldr.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, _onLoadError);
+			ldr.contentLoaderInfo.removeEventListener(Event.OPEN, _onLoadOpen);
+			ldr.contentLoaderInfo.removeEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
+			ldr.contentLoaderInfo.removeEventListener(Event.UNLOAD, _onUnload);			
+		}		
+		
+		private function _onLoadOpen(e:Event):void
 		{
 			dispatchEvent(e);
 		}	
 			
-		/**
-		 * @private
-		 */ 		
-		public function onLoadComplete(evt:Event):void
+		private function _onLoadComplete(evt:Event):void
 		{
 			_isLoaded = true;
 			
@@ -509,49 +542,53 @@ package com.apdevblog.load
 			}
 		}
 		
-		/**
-		 * @private
-		 */ 		
-		public function onLoadInit(e:Event):void
+		private function _onLoadInit(e:Event):void
 		{
 			_isInit = true;
 			
 			dispatchEvent(e);
 		}
 				
-		/**
-		 * @private
-		 */ 		
-		public function onLoadProgress(e:ProgressEvent):void
+		private function _onLoadProgress(e:ProgressEvent):void
 		{
 			dispatchEvent(e);
 		}
 				
-		/**
-		 * @private
-		 */ 		
-		public function onLoadError(e:IOErrorEvent):void
+		private function _onLoadError(e:IOErrorEvent):void
 		{
 			dispatchEvent(e);
 		}
 		
-		/**
-		 * @private
-		 */ 		
-		public function onHttpStatus(e:HTTPStatusEvent):void
+		private function _onHttpStatus(e:HTTPStatusEvent):void
 		{
 			dispatchEvent(e);			
 		}
 		
-		/**
-		 * @private
-		 */ 		
-		public function onUnload(e:Event):void
+		private function _onUnload(e:Event):void
 		{
 			_isLoaded = false;
 			_isInit = false;
 			
 			dispatchEvent(e);
+		}
+		
+		private function _onAddedToStage(event : Event) : void
+		{
+			removeEventListener(Event.ADDED_TO_STAGE, _onAddedToStage);
+			addEventListener(Event.REMOVED_FROM_STAGE, _onRemovedFromStage);
+		}
+		
+		private function _onRemovedFromStage(event : Event) : void
+		{
+			removeEventListener(Event.REMOVED_FROM_STAGE, _onRemovedFromStage);
+			
+			if(_autoUnload)
+			{
+				if(__ldr == null) return;
+				
+				_removeLoadListener(__ldr);
+				__ldr.unload();
+			}
 		}		
 	}
 }
