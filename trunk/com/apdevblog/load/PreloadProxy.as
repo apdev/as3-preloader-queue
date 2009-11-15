@@ -23,7 +23,6 @@ package com.apdevblog.load
 {
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
-	import flash.net.URLRequest;
 
 	/**
 	 * Manages the loading queue.
@@ -90,10 +89,10 @@ package com.apdevblog.load
 		/**
 		 * @private
 		 */		
-		public static function addAfter(pldr:PreLoader, afterUrlReq:URLRequest):void
+		public static function addAfter(pldr:PreLoader, beforeProLoader:PreLoader):void
 		{
-			getInstance()._addAfter(pldr, afterUrlReq);
-		}			
+			getInstance()._addAfter(pldr, beforeProLoader);
+		}		
 		
 		/**
 		 * @private
@@ -180,7 +179,7 @@ package com.apdevblog.load
 			_startPreload();
 		}
 		
-		private function _addAfter(pldr:PreLoader, afterUrlReq:URLRequest):void
+		private function _addAfter(pldr:PreLoader, beforePreLoader:PreLoader):void
 		{
 			if(__preloadArray.length == 0)
 			{
@@ -194,7 +193,7 @@ package com.apdevblog.load
 				{
 					var checkPldr:PreLoader = __preloadArray[i] as PreLoader;
 					
-					if(checkPldr.urlRequest.url == afterUrlReq.url)
+					if(checkPldr == beforePreLoader)
 					{
 						__preloadArray.splice(i+1, 0, pldr);
 					}

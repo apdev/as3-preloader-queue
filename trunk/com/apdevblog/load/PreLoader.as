@@ -392,21 +392,20 @@ package com.apdevblog.load
 		}
 		
 		/**
-		 * Loads the passed url (or <code>URLRequest</code>) by adding it to the loader queue after the passed url.
+		 * Loads the passed url (or <code>URLRequest</code>) by adding it to the loader queue after the passed PreLoader object.
 		 * 
 		 * <p>This call will be ignored when its currently loading.</p>
 		 * 
 		 * @param urlStringOrURLRequest url as <code>String</code> ("image.png") or <code>URLRequest</code>.
-		 * @param beforeUrl url to queue urlStringOrURLRequest after 
+		 * @param beforePreLoader <code>PreLoader</code> instance to queue urlStringOrURLRequest after 
 		 * 
 		 * @see #load()
 		 * @see #loadNext()
 		 * @see #loadImmediately()
 		 */
-		public function loadAfter(urlStringOrURLRequest : *, beforeUrl : String):void
+		public function loadAfter(urlStringOrURLRequest : *, beforePreLoader : PreLoader):void
 		{
 			var urlReq:URLRequest;
-			var afterUrlReq:URLRequest;
 			
 			if(urlStringOrURLRequest is String)
 			{
@@ -421,8 +420,6 @@ package com.apdevblog.load
 				throw new ArgumentError("The argument urlStringOrURLRequest has to be either type String or URLRequest");
 			}			
 			
-			afterUrlReq = new URLRequest(beforeUrl);
-						
 			if(__ldr != null)
 			{
 				if(urlReq.url == __urlReq.url)
@@ -438,7 +435,7 @@ package com.apdevblog.load
 			
 			_createLoader(urlReq);
 			
-			PreloadProxy.addAfter(this, afterUrlReq);
+			PreloadProxy.addAfter(this, beforePreLoader);
 		}		
 		
 		/**
