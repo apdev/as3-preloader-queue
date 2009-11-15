@@ -258,6 +258,25 @@ package com.apdevblog.load
 		/**
 		 * loads the passed url (or <code>URLRequest</code>) by adding it to the end of the loader queue.
 		 * 
+		 * <p>Example:
+		 * <listing>
+		 * var img1:PreLoader = new PreLoader();
+		 * img1.load("img1.jpg");
+		 *
+		 * var img2:PreLoader = new PreLoader();
+		 * img2.load("img2.jpg");
+		 * 
+		 * var img3:PreLoader = new PreLoader();
+		 * img3.load("img3.jpg");
+		 * 
+		 * var img4:PreLoader = new PreLoader();
+		 * img4.load("img4.jpg");
+		 * 
+		 * // now the queue looks like this:
+		 * // img1.jpg, img2.jpg, img3.jpg, img4.jpg
+		 * // where img1.jpg is currently loading
+		 * </listing></p>
+		 * 
 		 * @param urlStringOrURLRequest url as <code>String</code> ("image.png") or <code>URLRequest</code>.
 		 * 
 		 * @see #loadNext()
@@ -303,6 +322,25 @@ package com.apdevblog.load
 		 * loads the passed url (or <code>URLRequest</code>) by adding it after the current loading request.
 		 * 
 		 * <p>This call will be ignored when its currently loading.</p>
+		 * 
+		 * <p>Example:
+		 * <listing>
+		 * var img1:PreLoader = new PreLoader();
+		 * img1.load("img1.jpg");
+		 *
+		 * var img2:PreLoader = new PreLoader();
+		 * img2.load("img2.jpg");
+		 * 
+		 * var img3:PreLoader = new PreLoader();
+		 * img3.load("img3.jpg");
+		 * 
+		 * var img4:PreLoader = new PreLoader();
+		 * img4.loadNext("img4.jpg");
+		 * 
+		 * // now the queue looks like this:
+		 * // img1.jpg, img4.jpg, img2.jpg, img3.jpg
+		 * // where img1.jpg is currently loading
+		 * </listing></p>
 		 * 
 		 * @param urlStringOrURLRequest url as <code>String</code> ("image.png") or <code>URLRequest</code>.
 		 * 
@@ -350,6 +388,25 @@ package com.apdevblog.load
 		 * 
 		 * <p>This call will be ignored when its currently loading.</p>
 		 * 
+		 * <p>Example:
+		 * <listing>
+		 * var img1:PreLoader = new PreLoader();
+		 * img1.load("img1.jpg");
+		 *
+		 * var img2:PreLoader = new PreLoader();
+		 * img2.load("img2.jpg");
+		 * 
+		 * var img3:PreLoader = new PreLoader();
+		 * img3.load("img3.jpg");
+		 * 
+		 * var img4:PreLoader = new PreLoader();
+		 * img4.loadImmediately("img4.jpg");
+		 * 
+		 * // now the queue looks like this:
+		 * // img4.jpg, img1.jpg, img2.jpg, img3.jpg
+		 * // where img4.jpg is currently loading
+		 * </listing></p>
+		 * 
 		 * @param urlStringOrURLRequest url as <code>String</code> ("image.png") or <code>URLRequest</code>.
 		 * 
 		 * @see #load()
@@ -396,6 +453,25 @@ package com.apdevblog.load
 		 * 
 		 * <p>This call will be ignored when its currently loading.</p>
 		 * 
+		 * <p>Example:
+		 * <listing>
+		 * var img1:PreLoader = new PreLoader();
+		 * img1.load("img1.jpg");
+		 *
+		 * var img2:PreLoader = new PreLoader();
+		 * img2.load("img2.jpg");
+		 * 
+		 * var img3:PreLoader = new PreLoader();
+		 * img3.loadAfter("img3.jpg", img1);
+		 * 
+		 * var img4:PreLoader = new PreLoader();
+		 * img4.loadAfter("img4.jpg", img3);
+		 * 
+		 * // now the queue looks like this:
+		 * // img1.jpg, img3.jpg, img4.jpg, img2.jpg
+		 * // where img1.jpg is currently loading
+		 * </listing></p>
+		 *  
 		 * @param urlStringOrURLRequest url as <code>String</code> ("image.png") or <code>URLRequest</code>.
 		 * @param beforePreLoader <code>PreLoader</code> instance to queue urlStringOrURLRequest after 
 		 * 
